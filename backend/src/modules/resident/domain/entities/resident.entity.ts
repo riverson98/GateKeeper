@@ -13,6 +13,8 @@ export class ResidentProps {
   unit: UnitObjectValue;
   deliveryCodes?: DeliveryIdentifierObjectValue[] = [];
   createdAt?: Date;
+  updatedAt?: Date | null;
+  deletedAt?: Date | null;
 }
 
 export class ResidentEntity extends GenericEntity {
@@ -93,13 +95,22 @@ export class ResidentEntity extends GenericEntity {
     );
   }
 
+  update(props: Partial<ResidentProps>) {
+    if (props.name) this.changeName(props.name);
+    if (props.phone) this.changePhone(props.phone);
+    if (props.unit) this.relocateTo(props.unit.props);
+    if (props.deliveryCodes) this.props.deliveryCodes = props.deliveryCodes;
+
+    this.props.updatedAt = new Date();
+  }
+
   static create(
     name: string,
     phone: string,
     unitNumber: string,
     unitComplement: string,
   ): ResidentEntity {
-    const unit = new UnitObjectValue({
+    const unit = UnitObjectValue.create({
       number: unitNumber,
       complement: unitComplement,
     });
@@ -133,5 +144,16 @@ export class ResidentEntity extends GenericEntity {
     if (Object.keys(errors).length) {
       throw new EntityValidationError(errors);
     }
+  }
+
+  public delete(): void {
+    if (!this.isActive()) return;
+
+    this.props.deletedAt = new Date();
+    this.props.updatedAt = new Date();
+  }
+
+  public isActive(): boolean {
+    return !this.props.deletedAt;
   }
 }

@@ -1,6 +1,5 @@
 import { GenericContracts } from 'src/shared/domain/contracts/generic.contracts';
 import { GenericEntity } from 'src/shared/domain/entities/generic.entity';
-import { NotFoundError } from 'src/shared/errors/not-found-error';
 
 export abstract class InMemoryImplContracts<E extends GenericEntity>
   implements GenericContracts<E>
@@ -13,27 +12,44 @@ export abstract class InMemoryImplContracts<E extends GenericEntity>
     return Promise.resolve(entity);
   }
 
-  findByPredicate(predicate: (item: E) => boolean): Promise<E> {
-    const residentFound = this.entities.find(predicate);
+  private async find(filter: Partial<E>): Promise<E[]> {
+    const entityFound = this.entities.filter((entity) => {
+      const filterKeys = Object.keys(filter) as Array<keyof E>;
 
-    if (!residentFound) {
-      throw new NotFoundError('Resident not found');
-    }
+      return filterKeys.every((key) => {
+        const filterValue = filter[key];
+        const itemValue = entity[key];
 
-    return Promise.resolve(residentFound);
+        if (filterValue === undefined || filterValue === null) return true;
+
+        return String(itemValue) === String(filterValue);
+      });
+    });
+
+    return Promise.resolve(entityFound);
   }
 
-  findAll(): Promise<E[]> {
+  async findAll(): Promise<E[]> {
     return Promise.resolve(this.entities);
   }
 
-  async delete(id: string): Promise<void> {
-    const userFound = await this.findByPredicate((entity) => entity.id === id);
+  async findOne(filter: Partial<E>): Promise<E | null> {
+    const entities = await this.find(filter);
 
-    this.entities = this.entities.filter(
-      (entity) => entity.id !== userFound.id,
-    );
+    const entity = entities[0];
 
-    return Promise.resolve(undefined);
+    return Promise.resolve(entity || null);
+  }
+
+  async update(entity: E): Promise<E> {
+    const entityId = entity.id;
+
+    const index = this.entities.findIndex((item) => item.id === entityId);
+
+    if (index !== -1) {
+      this.entities[index] = entity;
+    }
+
+    return Promise.resolve(entity);
   }
 }

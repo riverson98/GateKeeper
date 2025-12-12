@@ -11,6 +11,7 @@ export class ResidentOutputDto {
   unitComplement: string;
   deliveryCodes: DeliveryCodeDto[];
   createdAt: Date;
+  updatedAt: Date;
 
   constructor(props: {
     id: string;
@@ -20,6 +21,7 @@ export class ResidentOutputDto {
     unitComplement: string;
     deliveryCodes: DeliveryCodeDto[];
     createdAt: Date;
+    updatedAt: Date;
   }) {
     this.id = props.id;
     this.name = props.name;
@@ -27,5 +29,6 @@ export class ResidentOutputDto {
     this.unitNumber = props.unitNumber;
     this.deliveryCodes = props.deliveryCodes;
     this.createdAt = props.createdAt;
+    this.updatedAt = props.updatedAt;
   }
 }
