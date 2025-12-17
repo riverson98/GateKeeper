@@ -1,98 +1,284 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚪 GateKeeper
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Sistema de gerenciamento de portaria para condomínios, desenvolvido para controlar residentes e códigos de entrega de produtos.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Descrição
 
-## Description
+O **GateKeeper** é uma aplicação backend desenvolvida em NestJS que oferece uma solução para gerenciar:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Residentes**: Cadastro de moradores com informações de contato e unidade
+- **Códigos de Entrega**: Controle de códigos de entrega de diferentes provedores (iFood, Mercado Livre, etc.)
 
-## Project setup
+O projeto segue os princípios de **Clean Architecture** e **DDD (Domain-Driven Design)**, garantindo separação de responsabilidades e manutenibilidade do código.
+
+## 🛠️ Tecnologias
+
+- **Node.js** com **TypeScript**
+- **NestJS** - Framework Node.js progressivo
+- **Prisma** - ORM moderno para TypeScript
+- **PostgreSQL** - Banco de dados relacional
+- **Docker Compose** - Orquestração do banco de dados
+
+## 📦 Pré-requisitos
+
+Antes de começar, certifique-se de ter instalado:
+
+- [Node.js](https://nodejs.org/) (versão 18 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/) (para o banco de dados)
+
+## 🚀 Instalação
+
+1. **Clone o repositório** (se ainda não o fez):
+   ```bash
+   git clone <url-do-repositorio>
+   cd GateKeeper/backend
+   ```
+
+2. **Instale as dependências**:
+   ```bash
+   npm install
+   ```
+
+3. **Configure as variáveis de ambiente**:
+   
+   Crie um arquivo `.env` na raiz do diretório `backend` com o seguinte conteúdo:
+   ```env
+   DATABASE_URL="postgresql://postgres:1234@localhost:5433/gatekeeperdb?schema=public"
+   PORT=3000
+   ```
+
+## 🗄️ Configuração do Banco de Dados
+
+O projeto utiliza Docker Compose para facilitar a configuração do banco de dados PostgreSQL.
+
+1. **Inicie o banco de dados**:
+   ```bash
+   docker-compose up -d
+   ```
+
+   Isso irá criar um container PostgreSQL na porta `5433` com as seguintes credenciais:
+   - **Usuário**: `postgres`
+   - **Senha**: `1234`
+   - **Database**: `gatekeeperdb`
+
+2. **Execute as migrações**:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+   Ou para gerar o cliente Prisma e aplicar migrações:
+   ```bash
+   npx prisma generate
+   npx prisma migrate deploy
+   ```
+
+## 🌱 Popular o Banco de Dados (Seed)
+
+O projeto inclui um script de seed para popular a base de dados com dados iniciais de exemplo.
+
+### Executando o Seed
+
+Para executar o script de seed, você pode usar um dos seguintes comandos:
 
 ```bash
-$ npm install
+# Usando o comando Prisma diretamente
+npx prisma db seed
+
+# Ou usando ts-node diretamente
+npx ts-node prisma/seed.ts
 ```
 
-## Compile and run the project
+### O que o Seed faz?
+
+O script de seed (`prisma/seed.ts`) realiza as seguintes operações:
+
+1. **Limpa dados existentes**: Remove todos os registros de `deliveryCodes` e `residents`
+2. **Cria residentes de exemplo**:
+   - **Residente 1**: 
+     - Nome: River
+     - Telefone: 47999998888
+     - Unidade: 101 - Bloco A
+     - Códigos de entrega: ABCD (IFOOD) e 1234 (MERCADO_LIVRE)
+   - **Residente 2**:
+     - Nome: Costa
+     - Telefone: 11988887777
+     - Unidade: 205 - Torre B
+
+### Configuração do Seed no package.json
+
+O seed está configurado no `package.json`:
+
+```json
+"prisma": {
+  "seed": "ts-node prisma/seed.ts"
+}
+```
+
+Isso permite que o Prisma execute automaticamente o seed quando necessário.
+
+## 🏃 Executando a Aplicação
+
+### Modo de Desenvolvimento
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+A aplicação estará disponível em `http://localhost:3000` (ou na porta configurada na variável `PORT`).
+
+### Modo de Produção
+
+1. **Compile o projeto**:
+   ```bash
+   npm run build
+   ```
+
+2. **Execute em modo de produção**:
+   ```bash
+   npm run start:prod
+   ```
+
+## 📜 Scripts Disponíveis
 
 ```bash
-# unit tests
-$ npm run test
+# Desenvolvimento
+npm run start              # Inicia a aplicação
+npm run start:dev          # Inicia em modo watch (desenvolvimento)
+npm run start:debug        # Inicia em modo debug
 
-# e2e tests
-$ npm run test:e2e
+# Build
+npm run build              # Compila o projeto TypeScript
 
-# test coverage
-$ npm run test:cov
+# Testes
+npm run test               # Executa testes unitários
+npm run test:watch         # Executa testes em modo watch
+npm run test:cov           # Executa testes com cobertura
+npm run test:e2e           # Executa testes end-to-end
+
+# Qualidade de Código
+npm run lint               # Executa o linter
+npm run format             # Formata o código com Prettier
+
+# Prisma
+npx prisma studio          # Abre o Prisma Studio (interface visual do banco)
+npx prisma generate        # Gera o cliente Prisma
+npx prisma migrate dev     # Cria e aplica uma nova migração
+npx prisma migrate deploy  # Aplica migrações pendentes
+npx prisma db seed         # Executa o script de seed
 ```
 
-## Deployment
+## 📁 Estrutura do Projeto
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```
+backend/
+├── prisma/
+│   ├── migrations/          # Migrações do banco de dados
+│   ├── schema.prisma        # Schema do Prisma
+│   └── seed.ts              # Script de seed (popular banco)
+├── src/
+│   ├── modules/
+│   │   └── resident/        # Módulo de residentes
+│   │       ├── application/ # Use cases e DTOs
+│   │       ├── domain/      # Entidades e Value Objects
+│   │       └── infrastructure/ # Controllers e repositórios
+│   ├── shared/              # Módulos compartilhados
+│   ├── app.module.ts        # Módulo raiz
+│   └── main.ts              # Arquivo de entrada
+├── test/                    # Testes end-to-end
+├── docker-compose.yml       # Configuração Docker Compose
+└── package.json
+```
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🏗️ Arquitetura
+
+O projeto segue os princípios de **Clean Architecture** e **DDD**, com as seguintes camadas:
+
+- **Domain**: Entidades e Value Objects com regras de negócio puras
+- **Application**: Use cases que orquestram a lógica de negócio
+- **Infrastructure**: Implementações concretas (repositórios, controllers)
+
+Para mais detalhes sobre a arquitetura, consulte o arquivo [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+## 📊 Modelo de Dados
+
+### Resident (Residente)
+- `id`: UUID (identificador único)
+- `name`: Nome do residente
+- `phone`: Telefone de contato
+- `unitNumber`: Número da unidade
+- `unitComplement`: Complemento da unidade (ex: Bloco A, Torre B)
+- `deliveryCodes`: Códigos de entrega associados
+- `createdAt`: Data de criação
+- `updatedAt`: Data de atualização
+- `deletedAt`: Data de exclusão (soft delete)
+
+### DeliveryCode (Código de Entrega)
+- `id`: UUID (identificador único)
+- `code`: Código de entrega
+- `provider`: Provedor (ex: IFOOD, MERCADO_LIVRE)
+- `residentId`: Referência ao residente
+
+## 🔍 Prisma Studio
+
+Para visualizar e editar os dados do banco de forma visual:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma studio
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Isso abrirá uma interface web em `http://localhost:5555` onde você pode visualizar e gerenciar os dados.
 
-## Resources
+## 📝 Exemplos de Uso
 
-Check out a few resources that may come in handy when working with NestJS:
+### Criar um Residente
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```typescript
+POST /residents
+{
+  "name": "João Silva",
+  "phone": "11999999999",
+  "unitNumber": "301",
+  "unitComplement": "Torre C",
+  "deliveryCodes": [
+    {
+      "code": "XYZ123",
+      "provider": "IFOOD"
+    }
+  ]
+}
+```
 
-## Support
+### Listar Residentes
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```typescript
+GET /residents
+```
 
-## Stay in touch
+### Buscar Residente por ID
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```typescript
+GET /residents/:id
+```
 
-## License
+## 🤝 Contribuindo
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+4. Push para a branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença UNLICENSED.
+
+## 📚 Recursos Úteis
+
+- [Documentação NestJS](https://docs.nestjs.com)
+- [Documentação Prisma](https://www.prisma.io/docs)
+- [Documentação Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+Desenvolvido com ❤️ usando NestJS e TypeScript

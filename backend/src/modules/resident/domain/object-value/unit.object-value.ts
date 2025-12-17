@@ -11,6 +11,14 @@ export class UnitObjectValue {
     UnitObjectValue.validate(this.props);
   }
 
+  get number() {
+    return this.props.number;
+  }
+
+  get complement() {
+    return this.props.complement;
+  }
+
   static create(props: UnitProps): UnitObjectValue {
     return new UnitObjectValue(props);
   }

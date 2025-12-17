@@ -16,16 +16,8 @@ export class DeliveryIdentifierObjectValue {
     return this.props.code;
   }
 
-  set code(newCode: string) {
-    this.props.code = newCode;
-  }
-
   get provider(): DeliveryProvider {
     return this.props.provider;
-  }
-
-  set provider(newProvider: DeliveryProvider) {
-    this.props.provider = newProvider;
   }
 
   static create(props: DeliveryIdentifierProps): DeliveryIdentifierObjectValue {

@@ -35,8 +35,8 @@ export class ResidentEntity extends GenericEntity {
     return this.props.unit;
   }
 
-  set unit(unit: UnitObjectValue) {
-    this.props.unit = unit;
+  get deliveryCodes() {
+    return this.props.deliveryCodes;
   }
 
   get id() {
@@ -47,16 +47,16 @@ export class ResidentEntity extends GenericEntity {
     return this.props.name;
   }
 
-  set name(value: string) {
-    this.props.name = value;
-  }
-
   get phone(): string {
     return this.props.phone;
   }
 
-  set phone(phone: string) {
-    this.props.phone = phone;
+  get updatedAt() {
+    return this.props.updatedAt;
+  }
+
+  get deletedAt() {
+    return this.props.deletedAt;
   }
 
   changeName(newName: string): void {
@@ -104,23 +104,15 @@ export class ResidentEntity extends GenericEntity {
     this.props.updatedAt = new Date();
   }
 
-  static create(
-    name: string,
-    phone: string,
-    unitNumber: string,
-    unitComplement: string,
-  ): ResidentEntity {
-    const unit = UnitObjectValue.create({
-      number: unitNumber,
-      complement: unitComplement,
-    });
+  static create(props: ResidentProps, id?: string): ResidentEntity {
+    const propsWithDefaults = {
+      ...props,
+      deliveryCodes: props.deliveryCodes ?? [],
+    };
 
-    return new ResidentEntity({
-      name,
-      phone,
-      unit,
-      deliveryCodes: [],
-    });
+    const resident = new ResidentEntity(propsWithDefaults, id);
+
+    return resident;
   }
 
   static validate(props: ResidentProps) {

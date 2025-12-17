@@ -23,8 +23,8 @@ export class UpdateResidentUseCase {
 
     resident.update(updateProps);
 
-    const residentUpdated = await this.residentRepo.update(resident);
+    await this.residentRepo.update(resident);
 
-    return ResidentMapper.toOutput(residentUpdated);
+    return ResidentMapper.toOutput(resident);
   }
 }

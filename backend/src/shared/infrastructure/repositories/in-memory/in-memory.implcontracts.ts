@@ -7,9 +7,9 @@ export abstract class InMemoryImplContracts<E extends GenericEntity>
   id = 0;
   entities: E[] = [];
 
-  save(entity: E): Promise<E> {
+  async save(entity: E): Promise<void> {
     this.entities.push(entity);
-    return Promise.resolve(entity);
+    await Promise.resolve();
   }
 
   private async find(filter: Partial<E>): Promise<E[]> {
@@ -41,7 +41,7 @@ export abstract class InMemoryImplContracts<E extends GenericEntity>
     return Promise.resolve(entity || null);
   }
 
-  async update(entity: E): Promise<E> {
+  async update(entity: E): Promise<void> {
     const entityId = entity.id;
 
     const index = this.entities.findIndex((item) => item.id === entityId);
@@ -50,6 +50,6 @@ export abstract class InMemoryImplContracts<E extends GenericEntity>
       this.entities[index] = entity;
     }
 
-    return Promise.resolve(entity);
+    await Promise.resolve();
   }
 }

@@ -5,6 +5,7 @@ import { ResidentOutputDto } from './dtos/resident-output.dto';
 import { ResidentEntity } from '../../domain/entities/resident.entity';
 import { CreateResidentInputDto } from './dtos/create-resident-input.dto';
 import { ResidentMapper } from './mappers/resident.mapper';
+import { UnitObjectValue } from '../../domain/object-value/unit.object-value';
 
 @Injectable()
 export class CreateResidentUseCase {
@@ -16,12 +17,16 @@ export class CreateResidentUseCase {
   async execute(
     createResidentDto: CreateResidentInputDto,
   ): Promise<ResidentOutputDto> {
-    const resident = ResidentEntity.create(
-      createResidentDto.name,
-      createResidentDto.phone,
-      createResidentDto.unit.number,
-      createResidentDto.unit.complement,
-    );
+    const unitProps = {
+      number: createResidentDto.unit.number,
+      complement: createResidentDto.unit.complement,
+    } as UnitObjectValue;
+
+    const resident = ResidentEntity.create({
+      name: createResidentDto.name,
+      phone: createResidentDto.phone,
+      unit: unitProps,
+    });
 
     if (
       createResidentDto.deliveryCodes &&

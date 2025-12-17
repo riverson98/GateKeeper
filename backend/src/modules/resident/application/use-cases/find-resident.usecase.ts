@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ResidentContracts } from '../../domain/contracts/resident.contracts';
+import {
+  ResidentContracts,
+  ResidentFilter,
+} from '../../domain/contracts/resident.contracts';
 import { ResidentOutputDto } from './dtos/resident-output.dto';
-import { ResidentFilter } from 'src/shared/domain/contracts/generic.contracts';
 import { ResidentMapper } from './mappers/resident.mapper';
 import { NotFoundError } from 'src/shared/errors/not-found-error';
 
