@@ -5,11 +5,10 @@ export interface ResidentFilter {
   id?: string;
   name?: string;
   email?: string;
+  unitNumber?: string;
 }
 
 export abstract class ResidentContracts extends GenericContracts<
   ResidentEntity,
   ResidentFilter
-> {
-  abstract findByUnitNumber(code: string): Promise<ResidentEntity | null>;
-}
+> {}

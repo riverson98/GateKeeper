@@ -16,7 +16,7 @@ model Resident {
 
   deletedAt DateTime?
   createdAt DateTime
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime?  @updatedAt
 
   @@map("residents")
 }
@@ -30,6 +30,26 @@ model DeliveryCode {
   resident   Resident @relation(fields: [residentId], references: [id])
 
   @@map("delivery_codes")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  
+  role         Role     @default(USER) 
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime? @updatedAt
+  deletedAt    DateTime?
+
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 datasource db {

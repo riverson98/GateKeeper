@@ -3,32 +3,13 @@ import {
   ResidentContracts,
   ResidentFilter,
 } from '../../domain/contracts/resident.contracts';
-import { ResidentPrismaMapper } from './mappers/resident-prisma.repository';
+import { ResidentPrismaMapper } from './mappers/resident-prisma.mapper';
 import { PrismaService } from 'src/shared/infrastructure/repositories/db/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ResidentImplContracts implements ResidentContracts {
   constructor(private readonly prisma: PrismaService) {}
-
-  async findByUnitNumber(number: string): Promise<ResidentEntity | null> {
-    const prismaResult = await this.prisma.resident.findFirst({
-      where: {
-        unitNumber: number,
-        deletedAt: null,
-      },
-
-      include: {
-        deliveryCodes: true,
-      },
-    });
-
-    if (!prismaResult) {
-      return null;
-    }
-
-    return ResidentPrismaMapper.toDomain(prismaResult);
-  }
 
   async save(entity: ResidentEntity): Promise<void> {
     const rawData = ResidentPrismaMapper.toPrisma(entity);

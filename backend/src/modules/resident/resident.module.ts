@@ -21,7 +21,7 @@ import { SharedModule } from 'src/shared/shared.module';
     UpdateResidentUseCase,
     DeleteResidentUseCase,
   ],
-  exports: [ResidentContracts],
+  exports: [],
   controllers: [ResidentController],
   imports: [SharedModule],
 })

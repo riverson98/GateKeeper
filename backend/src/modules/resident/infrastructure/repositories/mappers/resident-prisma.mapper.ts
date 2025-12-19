@@ -47,7 +47,7 @@ export class ResidentPrismaMapper {
       unitNumber: entity.unit.number,
       unitComplement: entity.unit.complement,
       createdAt: entity.createdAt ?? new Date(),
-      updatedAt: entity.updatedAt ?? new Date(),
+      updatedAt: entity.updatedAt || null,
       deletedAt: entity.deletedAt || null,
     };
   }
