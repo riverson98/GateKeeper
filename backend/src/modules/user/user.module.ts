@@ -21,7 +21,7 @@ import { FindAllUsersUseCase } from './application/use-case/find-all-users.useca
     DeleteUserUseCase,
     FindAllUsersUseCase,
   ],
-  exports: [],
+  exports: [UserContracts],
   controllers: [UserController],
   imports: [SharedModule],
 })
